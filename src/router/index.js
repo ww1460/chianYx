@@ -5,6 +5,7 @@ import index from '@/views/admin/home/index';
 import news from '@/views/admin/news/index';
 import test from '@/views/admin/test/index';
 import signUp from '@/views/admin/test/content/signUp';
+import store from '@/store';
 // import {
 //   getStore
 // } from "@/util/store";
@@ -18,97 +19,78 @@ const router = new Router({
     },
     {
       path: '/login',
-      name: '登录',
+      name: 'login',
       component: login,
+      meta: {
+        title: "登录",
+        keepAlive: true, //控制页面缓存参数
+        lightFlag: "login",
+      },
       children: [{
           path: '/index',
-          name: '首页',
-          component: index
+          name: 'index',
+          component: index,
+          meta: {
+            title: "首页",
+            keepAlive: true, //控制页面缓存参数
+            lightFlag: "index", //导航高亮标识
+          }
         },
+        // 新闻动态
         {
           path: '/news',
-          name: '新闻动态',
-          component: news
+          name: 'news',
+          component: news,
+          meta: {
+            title: "新闻动态",
+            keepAlive: true,
+            lightFlag: "news",
+          }
         },
+        // 测试报名
         {
           path: '/test',
-          name: '测试报名',
+          name: 'test',
           component: test,
-          children: [{
-            path: '/test/signUp',
-            name: '报名',
-            component: signUp
-          }]
-        }
+          meta: {
+            title: "测试报名",
+            keepAlive: true,
+            lightFlag: "test",
+          }
+        }, {
+          path: '/test/signUp',
+          name: 'signUp',
+          component: signUp,
+          meta: {
+            title: "报名",
+            keepAlive: true,
+            lightFlag: "test",
+          }
+        },
       ]
     },
 
   ]
 })
-// 导航守卫
-//  使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
-// router.beforeEach((to, from, next) => {
 
-//   // let token = getStore({
-//   //   name: 'token'
-//   // })
-//   // window.console.log(token)
-//   // requireAuth为true 必须做鉴权处理
-//   if (to.matched.some(res => res.meta.requireAuth)) {
-//     let token = getStore({
-//       name: 'token'
-//     })
-//     if (token) {
-//       // window.console.log(to.matched.some(res => res.meta.requireAuth))
-//     } else {
-//       next({
-//         path: '/login',
-//         query: {
-//           redirect: to.path
-//         }
-//       })
-//     }
-//   } else {
-//     next();
-//   }
-//   // if (to.path === '/login') {
-//   //   next();
-//   // } else {
-//   //   let token = getStore({
-//   //     name: 'token'
-//   //   })
-//   //   if (token) {
-//   //     next();
-//   //   } else {
-//   //     next('/login');
-//   //   }
-//   // }
-// });
-
-var routeList = [{
-  name: "首页",
-  path: "/index"
-}];
 router.beforeEach((to, from, next) => {
-  // 面包屑
   var index = -1;
-  for (var i = 0; i < routeList.length; i++) {
-    if (routeList[i].name == to.name) {
+  for (var i = 0; i < store.getters.routeList.length; i++) {
+    if (store.getters.routeList[i].title == to.meta.title) {
       index = i;
       break;
     }
   }
-
   if (index !== -1) {
     //如果存在路由列表，则把之后的路由都删掉
-    routeList.splice(index + 1, routeList.length - index - 1);
-  } else if (to.name != '登录') {
-    routeList.push({
-      "name": to.name,
-      "path": to.path
+    store.getters.routeList.splice(index + 1, store.getters.routeList.length - index - 1);
+  } else if (to.meta.title != '登录') {
+    store.getters.routeList.push({
+      "title": to.meta.title,
+      "path": to.fullPath
     });
   }
-  to.meta.routeList = routeList;
+  store.commit("SET_ROUTELIST", store.getters.routeList)
   next()
 });
 export default router;
