@@ -9,24 +9,24 @@
       class="demo-ruleForm"
     >
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="24" :md="6">
+        <el-col :xs="24" :sm="24" :md="24">
           <el-form-item :label="name?'公司名称':'您的姓名'" prop="name">
             <el-input type="name" v-model="ruleForm.name" placeholder="请输入您的真实姓名"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="6">
+        <el-col :xs="24" :sm="24" :md="24">
           <el-form-item label="登录密码" prop="password">
             <el-input type="password" v-model="ruleForm.password" placeholder="请输入您的登录密码"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="6">
+        <el-col :xs="24" :sm="24" :md="24">
           <el-form-item label prop="code">
             <el-input type="code" v-model="ruleForm.code" placeholder="请输入您收到的短信验证码">
               <el-button slot="append" @click="getCode()" style="font-size:16px">获取验证码</el-button>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="6">
+        <el-col :xs="24" :sm="24" :md="24">
           <el-form-item label>
             <div class="input_span">
               <span class="input_span1">密码安全程度</span>
@@ -37,7 +37,7 @@
             </div>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="6">
+        <el-col :xs="24" :sm="24" :md="24">
           <el-form-item class="button">
             <el-button type="danger" style="width:150px;height:40px" @click="finish('ruleForm')">完成</el-button>
           </el-form-item>
