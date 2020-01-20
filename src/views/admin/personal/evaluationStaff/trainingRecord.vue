@@ -1,0 +1,50 @@
+<template>
+  <div class="trainingRecord">
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="1" label="序号"  align="center"></el-table-column>
+      <el-table-column prop="2" label="创建时间"  align="center"></el-table-column>
+      <el-table-column prop="3" label="等级" align="center"></el-table-column>
+      <el-table-column prop="4" label="培训类型"  align="center"></el-table-column>
+      <el-table-column prop="5" label="班级名称"  align="center"></el-table-column>
+      <el-table-column prop="6" label="费用" align="center"></el-table-column>
+      <el-table-column prop="7" label="缴费状态"  align="center"></el-table-column>
+      <el-table-column prop="8" label="成绩"  align="center"></el-table-column>
+      <!-- <el-table-column prop="9" label="操作" align="center"></el-table-column> -->
+    </el-table>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      tableData: [
+        {
+          1: "2016-05-02",
+          2: "王小虎",
+          3: "上海市普陀区金沙江路 1518 弄"
+        },
+        {
+          1: "2016-05-04",
+          2: "王小虎",
+          3: "上海市普陀区金沙江路 1517 弄"
+        },
+        {
+          1: "2016-05-01",
+          2: "王小虎",
+          3: "上海市普陀区金沙江路 1519 弄"
+        },
+        {
+          1: "2016-05-03",
+          2: "王小虎",
+          3: "上海市普陀区金沙江路 1516 弄"
+        }
+      ]
+    };
+  },
+  methods: {}
+};
+</script>
+
+<style lang="less" scoped>
+</style>

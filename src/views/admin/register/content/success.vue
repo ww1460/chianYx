@@ -14,7 +14,11 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+      this.$router.push({ path: "/signin" });
+    }, 1000);
+  },
   methods: {}
 };
 </script>
@@ -30,8 +34,8 @@ export default {
       height: 100px;
       background-image: url(/image/index/success.png);
     }
-    a{
-        font-size: 18px;
+    a {
+      font-size: 18px;
     }
   }
 }

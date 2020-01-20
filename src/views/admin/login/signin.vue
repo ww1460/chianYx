@@ -22,9 +22,9 @@
             class="demo-ruleForm"
           >
             <el-form-item>
-              <div class="signin_radio" prop="role">
+              <div class="signin_radio" prop="usertype">
                 <el-radio-group
-                  v-model="ruleForm.role"
+                  v-model="ruleForm.usertype"
                   v-for="(item,index) in roleList"
                   :key="index"
                 >
@@ -32,11 +32,11 @@
                 </el-radio-group>
               </div>
             </el-form-item>
-            <el-form-item prop="user" :error="errorUser">
+            <el-form-item prop="loginName" :error="errorUser">
               <div style="text-align: center;">
                 <el-input
                   placeholder="请输入您的账号"
-                  v-model="ruleForm.user"
+                  v-model="ruleForm.loginName"
                   clearable
                   prefix-icon="el-icon-user-solid"
                 ></el-input>
@@ -71,7 +71,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import foot from "@/views/admin/components/foot.vue";
 
@@ -84,55 +83,65 @@ export default {
       title: "欢迎来到羽毛球运动水平等级评定!",
       roleList: [
         {
-          label: 0,
+          label: 1,
           value: "运动员"
         },
         {
-          label: 1,
+          label: 2,
           value: "考评员"
         },
         {
-          label: 2,
+          label: 3,
           value: "测评机构"
         }
       ],
       ruleForm: {
-        role: 0,
-        user: "",
+        usertype: 1,
+        loginName: "",
         password: ""
       },
       rules: {
-        user: [{ required: true, message: "账号不能为空", trigger: "blur" }],
+        loginName: [
+          { required: true, message: "账号不能为空", trigger: "blur" }
+        ],
         password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
       },
       errorPass: "",
       errorUser: ""
     };
   },
-
+  created() {},
   methods: {
     signin(ruleForm) {
       this.errorPass = "";
       this.errorUser = "";
       this.$refs[ruleForm].validate(valid => {
         if (valid) {
-          if (this.ruleForm.user == "123" && this.ruleForm.password == "123") {
-            this.$notify.success({
-              title: "提示",
-              message: "登录成功",
-              duration: 1500
-            });
-            this.$router.push({ path: "/" });
-          } else {
-            this.$nextTick(() => {
-              if (this.ruleForm.user !== "123") {
-                this.errorUser = "账号错误";
-              }
-              if (this.ruleForm.password !== "123") {
-                this.errorPass = "密码错误";
-              }
-            });
-          }
+          this.$store.dispatch("Login", this.ruleForm).then(data => {
+            window.console.log(data);
+            if (data.isSuccess) {
+              this.$notify.success({
+                title: "提示",
+                message: "登录成功",
+                duration: 1500
+              });
+              this.$store
+                .dispatch("GetPersonalInfo", data.userData)
+                .then(item => {
+                  if (item.userInfo) this.$router.push({ path: "/" });
+                  else
+                    this.$router.push({
+                      path: "/personal/completeInformation"
+                    });
+                });
+            } else {
+              this.$notify.error({
+                title: "提示",
+                message: data.errorMsg,
+                duration: 1500
+              });
+            }
+          });
         } else {
           return false;
         }
@@ -143,7 +152,7 @@ export default {
       this.$refs[ruleForm].resetFields();
     },
     clearForm() {
-      this.ruleForm.user = "";
+      this.ruleForm.loginName = "";
       this.ruleForm.password = "";
     }
   }

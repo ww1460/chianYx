@@ -29,7 +29,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.test {
-  // height: 5000px;
-}
 </style>

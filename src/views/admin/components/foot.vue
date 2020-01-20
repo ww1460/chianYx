@@ -10,12 +10,12 @@
               </span>
             </div>
             <div style="text-align:center">
-              <span>renzhoutiyu.sarn.com</span>
+              <span>{{data.e_mail}}</span>
             </div>
           </div>
           <div class="footer_content_line"></div>
           <div :class="['footer_content_right',(flag?'common_display':'')]">
-            <div
+            <!-- <div
               :class="flag?'footer_right':'footer_auto'"
               v-for="(item,index) in imgList"
               :key="index"
@@ -27,6 +27,30 @@
               <p class="footer_right_des">
                 <span>{{item.des}}</span>
               </p>
+            </div> -->
+            <div :class="flag?'footer_right':'footer_auto'">
+              <div class="footer_right_img common_backgroundImg">
+                  <img :src="data.file_path1"/>
+              </div>
+              <p class="footer_right_des">
+                <span>{{data.service_account1_name}}</span>
+              </p>
+            </div>
+            <div :class="flag?'footer_right':'footer_auto'">
+              <div class="footer_right_img common_backgroundImg">
+                  <img :src="data.file_path2"/>
+              </div>
+              <p class="footer_right_des">
+                <span>{{data.service_account2_name}}</span>
+              </p>
+            </div>
+             <div :class="flag?'footer_right':'footer_auto'">
+              <div class="footer_right_img common_backgroundImg">
+                  <img :src="data.file_path3"/>
+              </div>
+              <p class="footer_right_des">
+                <span>{{data.service_account3_name}}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -37,38 +61,43 @@
         <p>
           <span>版权所有</span>
         </p>
-        <p>鲁公网安备 {{copyright}} 号</p>
+        <p>鲁公网安备 37020202001092 号</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { GetContactUsList } from "@/api/admin/common.js";
 export default {
   props: {
     content: Boolean
   },
   data() {
     return {
-      imgList: [
-        {
-          ewmImg: "/image/index/ewm1.png",
-          des: "仁洲体育服务号"
-        },
-        {
-          ewmImg: "/image/index/ewm2.png",
-          des: "“羽毛球运动水平等级评定”服务号"
-        },
-        {
-          ewmImg: "/image/index/ewm3.png",
-          des: "仁洲体育服务号"
-        }
-      ],
-      copyright: "37020202001092",
+      data:[],
+      // imgList: [
+      //   {
+      //     ewmImg: "/image/index/ewm1.png",
+      //     des: "仁洲体育服务号"
+      //   },
+      //   {
+      //     ewmImg: "/image/index/ewm2.png",
+      //     des: "“羽毛球运动水平等级评定”服务号"
+      //   },
+      //   {
+      //     ewmImg: "/image/index/ewm3.png",
+      //     des: "仁洲体育服务号"
+      //   }
+      // ],
+      // copyright: "37020202001092",
       screenWidth: document.documentElement.clientWidth, //屏幕宽度
       flag: true,
       timer: true
     };
+  },
+  created(){
+    this.getList()
   },
   mounted() {
     this.screenWidth = document.body.offsetWidth;
@@ -99,7 +128,17 @@ export default {
       }
     }
   },
-  methods: {}
+  methods: {
+    getList() {
+      // 联系我们
+      GetContactUsList({}).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.data = list.items;
+        }
+      });
+    },
+  }
 };
 </script>
 

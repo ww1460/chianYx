@@ -3,7 +3,7 @@
     <div class="swiper-container wheel_top">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item,index) in dataList" :key="index">
-          <img :src="item" />
+          <img :src="item.file_path" @click="openUrl(item.link_url)" />
         </div>
       </div>
       <div class="swiper-pagination"></div>
@@ -14,19 +14,13 @@
 </template>
 
 <script>
-
 import Swiper from "swiper";
-
+import { GetBannerList } from "@/api/admin/common.js";
 export default {
-  name:'',
+  name: "",
   data() {
     return {
-      dataList: [
-        "https://i1.mifile.cn/a4/xmad_15532384207972_iJXSx.jpg",
-        "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg",
-        "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
-        "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg"
-      ],
+      dataList: [],
       swiper: null
     };
   },
@@ -34,7 +28,23 @@ export default {
   mounted() {
     this.creSwiper();
   },
+  created() {
+    this.getList();
+  },
   methods: {
+    getList() {
+      GetBannerList({}).then(data => {
+        window.console.log(data);
+        var list = data.data.result;
+        if (list) {
+          this.dataList = list.items;
+        }
+      });
+    },
+    openUrl(e) {
+      var url = "http://" + e;
+      window.open(url, "_blank");
+    },
     creSwiper() {
       this.$nextTick(() => {
         this.swiper = new Swiper(".wheel_top", {
@@ -43,7 +53,7 @@ export default {
           autoplay: 3000,
           paginationClickable: true,
           nextButton: ".swiper-button-next",
-          prevButton: ".swiper-button-prev",
+          prevButton: ".swiper-button-prev"
         });
       });
     }

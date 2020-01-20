@@ -15,7 +15,9 @@
       </el-col>
       <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
         <p class="test_line">
-          <a :href="morePath">查看更多&gt;</a>
+          <router-link :to="morePath">
+            <a class="test_line_a">查看更多&gt;</a>
+          </router-link>
         </p>
       </el-col>
     </el-row>
@@ -32,7 +34,11 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  created(){
+    
+  },
+  methods: {
+  }
 };
 </script>
 
@@ -42,7 +48,7 @@ export default {
     height: 50px;
     border-bottom: 1.5px solid #c4c4c4;
     position: relative;
-    a {
+    .test_line_a {
       position: absolute;
       bottom: 0px;
       right: 2px;
@@ -71,7 +77,7 @@ export default {
       border-bottom: 2px solid #b93229;
     }
   }
-  
+
   @media screen and (max-width: 1000px) {
     .test_center_left {
       display: none;

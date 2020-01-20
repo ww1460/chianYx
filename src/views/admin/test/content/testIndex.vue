@@ -18,35 +18,38 @@
             <div class="testIndex_right">
               <ul class="card_content_ul">
                 <li>
-                  <h4>{{item.testTitle}}</h4>
+                  <h4>{{item.test_class_title}}</h4>
                 </li>
                 <li class="card_content_li">
                   <span
                     class="icon common_backgroundImg"
                     :style="'background-image:url(' + iconList[1]  + ')'"
                   ></span>
-                  报名时间： {{item.registrationStartTime}} 至 {{item.registrationEndTime}}
+                  报名时间： {{item.registration_start_time|dateformat('YYYY-MM-DD HH:mm')}} 至 {{item.registration_end_time|dateformat('YYYY-MM-DD HH:mm')}}
                 </li>
                 <li class="card_content_li">
                   <span
                     class="icon common_backgroundImg"
                     :style="'background-image:url(' + iconList[1]  + ')'"
                   ></span>
-                  测试时间：{{item.testStartTime}} 至 {{item.testEndTime}}
+                  测试时间：{{item.test_start_time|dateformat('YYYY-MM-DD HH:mm')}} 至 {{item.test_end_time|dateformat('YYYY-MM-DD HH:mm')}}
                 </li>
                 <li class="card_content_li">
                   <span
                     class="icon common_backgroundImg"
                     :style="'background-image:url(' + iconList[1]  + ')'"
                   ></span>
-                  测试地点：{{item.testLocation}}
+                  测试地点：{{item.test_detail_addr}}
                 </li>
                 <li class="card_content_li">
                   <span
                     class="icon common_backgroundImg"
                     :style="'background-image:url(' + iconList[1]  + ')'"
                   ></span>
-                  测试等级：{{item.testLevel}}
+                  测试等级：<span
+                   v-for="(item,index) in item.grade"
+                   :key="index"
+                  >{{item}}\</span>
                 </li>
                 <!-- <span class="card_details">
                   <el-button size="mini">详 情</el-button>
@@ -63,85 +66,64 @@
       </el-col>
     </el-row>
     <div class="pagination">
-      <el-pagination background layout="prev, pager, next" :total="100"></el-pagination>
+       <el-pagination background 
+            layout="prev, pager, next" 
+            @current-change="handleCurrentChange"
+            :page-size="paging.limit"
+            :total="totalCount">
+        </el-pagination> 
     </div>
   </div>
 </template>
 
 <script>
+import { GetExaminerClassList } from "@/api/admin/common.js";
+
 export default {
   data() {
     return {
       iconList: ["/image/index/icon_place.png", "/image/index/icon_time.png"],
-      data: [
-        {
-          registrationStartTime: "2019-10-11",
-          registrationEndTime: "2019-10-11",
-          testStartTime: "2019-10-11",
-          testEndTime: "2019-10-11",
-          testLocation: "山东省青岛市李沧区精神病医院",
-          testLevel: "低能7级",
-          testTitle: "航州畅想体育策划有限公司",
-          imgSrc: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg"
-        },
-        {
-          registrationStartTime: "2019-10-11",
-          registrationEndTime: "2019-10-11",
-          testStartTime: "2019-10-11",
-          testEndTime: "2019-10-11",
-          testLocation: "山东省青岛市李沧区精神病医院",
-          testLevel: "低能7级",
-          testTitle: "航州畅想体育策划有限公司",
-          imgSrc: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg"
-        },
-        {
-          registrationStartTime: "2019-10-11",
-          registrationEndTime: "2019-10-11",
-          testStartTime: "2019-10-11",
-          testEndTime: "2019-10-11",
-          testLocation: "山东省青岛市李沧区精神病医院",
-          testLevel: "低能7级",
-          testTitle: "航州畅想体育策划有限公司",
-          imgSrc: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg"
-        },
-        {
-          registrationStartTime: "2019-10-11",
-          registrationEndTime: "2019-10-11",
-          testStartTime: "2019-10-11",
-          testEndTime: "2019-10-11",
-          testLocation: "山东省青岛市李沧区精神病医院",
-          testLevel: "低能7级",
-          testTitle: "航州畅想体育策划有限公司",
-          imgSrc: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg"
-        },
-        {
-          registrationStartTime: "2019-10-11",
-          registrationEndTime: "2019-10-11",
-          testStartTime: "2019-10-11",
-          testEndTime: "2019-10-11",
-          testLocation: "山东省青岛市李沧区精神病医院",
-          testLevel: "低能7级",
-          testTitle: "航州畅想体育策划有限公司",
-          imgSrc: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg"
-        },
-        {
-          registrationStartTime: "2019-10-11",
-          registrationEndTime: "2019-10-11",
-          testStartTime: "2019-10-11",
-          testEndTime: "2019-10-11",
-          testLocation: "山东省青岛市李沧区精神病医院",
-          testLevel: "低能7级",
-          testTitle: "航州畅想体育策划有限公司",
-          imgSrc: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg"
-        }
-      ],
-      val: {}
+      data: [],
+      val: {},
+      totalCount:0,
+      paging: {
+        limit: 1,
+        page: 1
+      },
+      test:{}
     };
+  },
+  created(){
+    // search.$on('blur', (arg) => { 
+    //     this.test= arg; // 接收        
+    // });
+    // window.console.log("11"+this.test);
+    this.getList();
   },
   methods: {
     signUp(item) {
       window.console.log(item);
-    }
+    },
+    getList() {
+      // 测试班列表
+      GetExaminerClassList(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.data= list.items;
+          this.totalCount=list.totalCount;
+        }
+      });
+    },
+    // 分页
+    handleCurrentChange(cpage){
+      this.paging.page=cpage;
+      GetExaminerClassList(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.data= list.items;
+        }
+      });
+    },
   }
 };
 </script>

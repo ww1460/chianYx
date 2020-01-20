@@ -43,9 +43,9 @@ export default {
     bgImgSrc: String
   },
   data() {
-    return {};
+    return {
+    };
   },
-  methods: {}
 };
 </script>
 

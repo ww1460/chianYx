@@ -50,18 +50,18 @@ export default {
   },
   data() {
     return {
-      role: 0,
+      role: 1,
       roleList: [
         {
-          label: 0,
+          label: 1,
           value: "运动员"
         },
         {
-          label: 1,
+          label: 2,
           value: "考评员"
         },
         {
-          label: 2,
+          label: 3,
           value: "测评机构"
         }
       ],
@@ -70,7 +70,7 @@ export default {
   },
   beforeDestroy() {
     this.$store.commit("SET_REGISTER_STEP", -1);
-    this.$store.commit("SET_REGISTER_ROLE", 0);
+    this.$store.commit("SET_REGISTER_ROLE", 1);
   },
   created() {
     let registerStep = getStore({ name: "register_step" });

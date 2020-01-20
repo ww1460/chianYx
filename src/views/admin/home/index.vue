@@ -6,10 +6,10 @@
       <!-- 新闻 -->
       <news-information />
       <!-- 测试报名 -->
-      <test-title title="测试报名" morePath="/" />
+      <test-title title="测试报名" morePath="/test" />
       <test-registration />
       <!-- 考评员 -->
-      <testTitle title="考评员" morePath="/" />
+      <testTitle title="考评员" morePath="/evaluationStaff" />
       <appraiser />
     </div>
     <div class="home1 common_backgroundImg">
@@ -29,6 +29,7 @@
           :moreHide="false"
           imgSrc="/image/index/cooperativePartner.png"
         />
+        <partnership />
       </div>
     </div>
     <div class="home2">
@@ -62,8 +63,11 @@ import appraiser from "@/views/admin/home/content/appraiser.vue";
 // 精彩图片视频
 import wonderfulPVTitle from "@/views/admin/home/content/wonderfulPVTitle.vue";
 import wheel2 from "@/views/admin/home/swiper/wheel2.vue";
+// 合作伙伴
+import partnership from "@/views/admin/home/content/partnership.vue";
 // 常见问题
 import commonProblem from "@/views/admin/home/content/commonProblem.vue";
+
 export default {
   components: {
     wheel,
@@ -73,12 +77,16 @@ export default {
     appraiser,
     wonderfulPVTitle,
     wheel2,
-    commonProblem
+    commonProblem,
+    partnership
   },
   data() {
     return {
       test_title: ["测试报名", "考评员"]
     };
+  },
+  created() {
+    
   },
   methods: {}
 };

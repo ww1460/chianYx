@@ -5,14 +5,14 @@
         <p class="problem_content_p">
           <span
             class="problem_icon_title common_backgroundImg"
-            :style="'background-image:url(' + item.problemIconTitle  + ')'"
+            :style="'background-image:url(' +static_img_url + index +'.png' +')'"
           ></span>
         </p>
         <p>
-          <span class="problem_title">{{item.problemTitle}}</span>
+          <span class="problem_title">{{item.news_subject}}</span>
         </p>
         <p>
-          <span class="problem_wenzi">{{item.problemcontent}}</span>
+          <span class="problem_wenzi">{{item.news_content}}</span>
         </p>
       </div>
     </div>
@@ -24,44 +24,32 @@
 </template>
 
 <script>
+import { GetQuestionsList } from "@/api/admin/common.js";
 export default {
   data() {
     return {
-      data: [
-        {
-          problemIconTitle: "/image/index/zuhe1.png",
-          problemTitle: "机构账号如何进行资格申请？",
-          problemcontent:
-            "媒体查询包含一个可选的媒体类型和媒体特性表达式(0或多个)最终会被解析为true或false。如果媒体查询中指定的媒体类型匹配展示文档所使用的设备类型，并且所有的表达式的值都是true，那么该媒体查询的结果为true。"
-        },
-        {
-          problemIconTitle: "/image/index/zuhe2.png",
-          problemTitle: "机构账号如何进行资格申请？",
-          problemcontent:
-            "媒体查询包含一个可选的媒体类型和媒体特性表达式(0或多个)最终会被解析为true或false。如果媒体查询中指定的媒体类型匹配展示文档所使用的设备类型，并且所有的表达式的值都是true，那么该媒体查询的结果为true。"
-        },
-        {
-          problemIconTitle: "/image/index/zuhe3.png",
-          problemTitle: "机构账号如何进行资格申请？",
-          problemcontent:
-            "媒体查询包含一个可选的媒体类型和媒体特性表达式(0或多个)最终会被解析为true或false。如果媒体查询中指定的媒体类型匹配展示文档所使用的设备类型，并且所有的表达式的值都是true，那么该媒体查询的结果为true。"
-        },
-        {
-          problemIconTitle: "/image/index/zuhe4.png",
-          problemTitle: "机构账号如何进行资格申请？",
-          problemcontent:
-            "媒体查询包含一个可选的媒体类型和媒体特性表达式(0或多个)最终会被解析为true或false。如果媒体查询中指定的媒体类型匹配展示文档所使用的设备类型，并且所有的表达式的值都是true，那么该媒体查询的结果为true。"
-        },
-        {
-          problemIconTitle: "/image/index/zuhe5.png",
-          problemTitle: "机构账号如何进行资格申请？",
-          problemcontent:
-            "媒体查询包含一个可选的媒体类型和媒体特性表达式(0或多个)最终会被解析为true或false。如果媒体查询中指定的媒体类型匹配展示文档所使用的设备类型，并且所有的表达式的值都是true，那么该媒体查询的结果为true。"
-        }
-      ]
+      static_img_url:'/image/index/zuhe',
+      data: [],
+      paging: {
+        limit: 3,
+        page: 1
+      },
     };
   },
-  methods: {}
+  created(){
+    this.getList()
+  },
+  methods: {
+    getList() {
+      // 常见问题列表
+      GetQuestionsList(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.data = list.items;
+        }
+      });
+    },
+  }
 };
 </script>
 
@@ -88,7 +76,6 @@ export default {
       display: inline-block;
       width: 35px;
       height: 30px;
-      background-image: url(/image/index/zuhe1.png);
     }
     .problem_title {
       font-style: normal;
@@ -103,6 +90,11 @@ export default {
       font-size: 14px;
       line-height: 20px;
       color: #000000;
+      display: -webkit-box;
+      -webkit-line-clamp: 7; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      -webkit-box-orient: vertical;
     }
   }
   .problem_bottom {

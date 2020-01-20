@@ -49,7 +49,8 @@
 
 <script>
 import { checkStrong } from "@/util/validate.js";
-
+import { getStore } from "@/util/store";
+import { Register } from "@/api/admin/login.js";
 var validatName = (rule, value, callback) => {
   if (value === "") {
     callback(new Error("请输入您的真是姓名哦~"));
@@ -88,7 +89,10 @@ export default {
         name: "",
         password: "",
         code: "",
-        phone: ""
+        mobile: ""
+      },
+      submitForm: {
+        isverify: 1
       },
       rules: {
         name: [{ validator: validatName, trigger: "blur" }],
@@ -102,7 +106,6 @@ export default {
     next: Function,
     name: Boolean
   },
-  mounted() {},
   watch: {
     ruleForm: {
       handler(newVal) {
@@ -126,12 +129,26 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.submitForm.mobile = getStore({ name: "mobile" }).mobile;
+    this.submitForm.userType = getStore({ name: "register_role" });
+  },
   methods: {
     getCode() {},
     finish(ruleForm) {
+      this.submitForm.password = this.ruleForm.password;
+      window.console.log(this.submitForm);
       this.$refs[ruleForm].validate(valid => {
         if (valid) {
-          this.next();
+          Register(this.submitForm).then(data => {
+            window.console.log(data);
+            var list = data.data.result;
+            if (list) {
+              if (list.isSuccess) {
+                this.next();
+              }
+            }
+          });
         } else {
           return false;
         }

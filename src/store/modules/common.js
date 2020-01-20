@@ -7,9 +7,12 @@ const common = {
         screen: -1,
         routeList: [],
         register_step: 0,
-        register_role: 0
+        register_role: 0,
+        
     },
-    actions: {},
+    actions: {
+
+    },
     mutations: {
         SET_SCREEN: (state, screen) => {
             state.screen = screen

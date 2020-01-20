@@ -14,7 +14,7 @@
         <el-card shadow="always">
           <div slot="header">
             <p class="card_title">
-              <span>{{item.appraiserTitle}}</span>
+              <span>{{item.name}}</span>
             </p>
           </div>
           <div class="card_content">
@@ -24,14 +24,14 @@
                   class="icon common_backgroundImg"
                   :style="'background-image:url(' + iconList[0]  + ')'"
                 ></span>
-                {{item.appraiserProvince}} {{item.appraiserCity}} {{item.appraiserArea}}
+                {{item.class_room_addr}}
               </li>
               <li class="card_content_li">
                 <span
                   class="icon common_backgroundImg"
                   :style="'background-image:url(' + iconList[1]  + ')'"
                 ></span>
-                报名时间：{{item.registrationStartTime}} 至 {{item.registrationEndTime}}
+                报名时间：{{item.apply_start_time|dateformat('YYYY-MM-DD')}} 至 {{item.apply_end_time|dateformat('YYYY-MM-DD')}}
               </li>
             </ul>
             <p class="line"></p>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { GetExaminerClassList2 } from "@/api/admin/common.js";
 export default {
   name: "",
   props: {
@@ -94,14 +95,31 @@ export default {
           testPrice: "3950"
         }
       ],
-      iconList: ["/image/index/icon_place.png", "/image/index/icon_time.png"]
+      iconList: ["/image/index/icon_place.png", "/image/index/icon_time.png"],
+      paging: {
+        limit: 3,
+        page: 1
+      },
     };
   },
-  methods: {}
+  created(){
+    this.getList()
+  },
+  methods: {
+    getList() {
+      // 考评员列表
+      GetExaminerClassList2(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.data = list.items;
+        }
+      });
+    },
+  }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .appraiser {
   margin-top: 10px;
   .el-card__body {
@@ -117,6 +135,7 @@ export default {
       span {
         display: block;
         padding: 20px;
+        color: #FFFFFF;
       }
     }
   }

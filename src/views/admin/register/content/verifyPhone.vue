@@ -45,6 +45,7 @@
 
 <script>
 import { isMobile } from "@/util/validate.js";
+import { setStore } from "@/util/store";
 var checkPhone = (rule, value, callback) => {
   if (!value) {
     callback(new Error("请输入联系方式"));
@@ -101,6 +102,13 @@ export default {
       this.$refs[ruleForm].validate(valid => {
         if (valid) {
           this.next();
+          setStore({
+            name: "mobile",
+            content: {
+              mobile: this.ruleForm.phone
+            },
+            type: "session"
+          });
         } else {
           return false;
         }

@@ -206,6 +206,23 @@ export function validatename(name) {
 }
 
 /**
+ * 判断英文名是否正确
+ */
+export function validateEname(name) {
+  const regEName = /^[a-zA-Z]+$/; // 验证没有空格的英文名
+  // const regEName = /^[a-zA-Z][A-Za-z\s]*[a-zA-Z]*$/ 验证有空格的英文名
+  if (!regEName.test(name)) return false
+  return true
+}
+/**
+ * 判断英文名首字母是否大写
+ */
+export function validateCapnanme(name) {
+  const regcapital = /^[A-Z]/;
+  if (regcapital.test(name)) return false
+  return true
+}
+/**
  * 判断是否为整数
  */
 export function validatenum(num, type) {

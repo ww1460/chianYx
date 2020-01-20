@@ -10,18 +10,11 @@
               <span>|</span>
               <span @click="register">注册</span>
             </div>
-            <div v-else>
-              <p v-if="userStatus">
-                <span></span>
-                <span style="display:inline-block;">我已经有账户,现在就</span>
-                <router-link to="/signin">
-                  <a style="display:inline-block;color:#ea0000;">登录</a>
-                </router-link>
-              </p>
-              <p v-else>
+            <div v-if="userStatus">
+              <p>
                 <span>
                   <i class="el-icon-user-solid"></i>
-                  {{user.userName}}
+                  {{userInfo.mobile}}
                 </span>
                 <span></span>
                 <span>
@@ -29,10 +22,18 @@
                   消息 (
                   <a
                     style="color:#F56C6C;position: relative;left: -2px;top: 1px;"
-                  >{{user.mount}}</a>)
+                  >{{userInfo.userId}}</a>)
                 </span>
+                <span @click="out()">退出</span>
               </p>
             </div>
+            <p v-if="loginStatus">
+              <span></span>
+              <span style="display:inline-block;">我已经有账户,现在就</span>
+              <router-link to="/signin">
+                <a style="display:inline-block;color:#ea0000;">登录</a>
+              </router-link>
+            </p>
           </div>
         </div>
       </div>
@@ -46,13 +47,9 @@
     </div>
     <div class="content">
       <keep-alive>
-        <router-view v-if="$route.meta.keepAlive">
-          <!-- 这里是会被缓存的视图组件 -->
-        </router-view>
+        <router-view v-if="$route.meta.keepAlive" />
       </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive">
-        <!-- 这里是不被缓存的视图组件-->
-      </router-view>
+      <router-view v-if="!$route.meta.keepAlive" />
     </div>
     <div class="foot">
       <foot :content="this.$route.meta.bottomFlag" />
@@ -63,31 +60,65 @@
 <script>
 import navigation from "@/views/admin/components/navigation.vue";
 import foot from "@/views/admin/components/foot.vue";
+import { mapGetters } from "vuex";
+import { getStore } from "@/util/store";
+
 export default {
   components: {
     navigation,
     foot
   },
+  computed: {
+    ...mapGetters(["userInfo", "userToken"])
+  },
   data() {
     return {
       title: "欢迎来到羽毛球运动水平等级评定!",
       logonStatus: true,
-      userStatus: true,
-      user: {
-        userName: "林峰",
-        mount: "20"
-      }
+      userStatus: false,
+      loginStatus: false
     };
   },
-
+  watch: {
+    userToken(val) {
+      if (!val) {
+        this.logonStatus = true;
+        this.userStatus = false;
+        this.loginStatus = false;
+      }
+    }
+  },
+  created() {
+    this.$store.commit("SET_USERIFNO", getStore({ name: "userInfo" }));
+    this.$store.commit("SET_USERTOKEN", getStore({ name: "userToken" }));
+    this.$store.commit("SET_USERROLE", getStore({ name: "userRole" }));
+    this.$store.commit("SET_PERSONALINFO", getStore({ name: "personalInfo" }));
+    if (this.userToken) {
+      this.logonStatus = false;
+      this.userStatus = true;
+      this.loginStatus = false;
+    } else {
+      this.logonStatus = true;
+      this.userStatus = false;
+      this.loginStatus = false;
+    }
+  },
   methods: {
     login() {
       this.logonStatus = false;
+      this.userStatus = false;
+      this.loginStatus = false;
       this.$router.push({ path: "/signin" });
     },
     register() {
       this.$router.push({ path: "/register" });
       this.logonStatus = false;
+      this.userStatus = false;
+      this.loginStatus = true;
+    },
+    out() {
+      this.$store.dispatch("loginOut");
+      this.$router.push({ path: "/index" });
     }
   }
 };

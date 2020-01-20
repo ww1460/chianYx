@@ -1,11 +1,11 @@
 <template>
-  <div class="news">
+  <div class="newsInformation">
     <el-row :gutter="10">
       <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" style="padding:5px">
         <div class="swiper-container wheel_content">
           <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in dataList" :key="index">
-              <img :src="item" class="imgs" />
+              <img :src="item.thumbnail" class="imgs" />
             </div>
           </div>
           <div class="swiper-pagination"></div>
@@ -14,11 +14,9 @@
       <el-col
         :xs="24"
         :sm="12"
-        :md="6"
+        :md="12"
         :lg="8"
         :xl="8"
-        v-for="(item,index) in data"
-        :key="index"
         style="padding: 20px 10px;"
       >
         <div class="newsList">
@@ -26,20 +24,58 @@
             <p>
               <span
                 class="newsTitleImgSrc common_backgroundImg"
-                :style="'background-image:url(' + item.newsTitleImgSrc  + ')'"
+                :style="'background-image:url(' + news.newsTitleImgSrc  + ')'"
               ></span>
-              <span>{{item.newsTitle}}</span>
+              <span>{{news.newsTitle}}</span>
             </p>
             <p>
-              <a :href="item.morePath" style="color:#B93229">查看更多&gt;</a>
+              <router-link :to="news.morePath">
+                <a style="color:#B93229;cursor: pointer;">查看更多&gt;</a>
+              </router-link>
             </p>
           </div>
           <p class="line"></p>
           <div class="newsList_content">
             <ul>
-              <li class="common_display" v-for="(items,index) in item.newsList" :key="index">
+              <li class="common_display" v-for="(items,index) in newsList" :key="index">
                 <i class="radius"></i>
-                <a :href="items.newsPath" class="newsList_des common_text">{{items.newListTitle}}</a>
+                <!-- <a :href="items.newsPath" class="newsList_des common_text">{{items.news_subject}}</a> -->
+                <a class="newsList_des common_text">{{items.news_subject}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </el-col>
+      <el-col
+        :xs="24"
+        :sm="12"
+        :md="12"
+        :lg="8"
+        :xl="8"
+        style="padding: 20px 10px;"
+      >
+        <div class="newsList">
+          <div class="newsList_title common_display">
+            <p>
+              <span
+                class="newsTitleImgSrc common_backgroundImg"
+                :style="'background-image:url(' + notices.newsTitleImgSrc  + ')'"
+              ></span>
+              <span>{{notices.newsTitle}}</span>
+            </p>
+            <p>
+              <router-link :to="notices.morePath">
+                <a style="color:#B93229;cursor: pointer;">查看更多&gt;</a>
+              </router-link>
+            </p>
+          </div>
+          <p class="line"></p>
+          <div class="newsList_content">
+            <ul>
+              <li class="common_display" v-for="(items,index) in noticeList" :key="index">
+                <i class="radius"></i>
+                <!-- <a :href="items.newsPath" class="newsList_des common_text">{{items.news_subject}}</a> -->
+                <a class="newsList_des common_text">{{items.news_subject}}</a>
               </li>
             </ul>
           </div>
@@ -51,120 +87,66 @@
 
 <script>
 import Swiper from "swiper";
-
+import { GetPhotoList,GetNewsList,GetNotificList } from "@/api/admin/common.js";
 export default {
-  name:'',
+  name: "",
   data() {
     return {
-      dataList: [
-        "https://i1.mifile.cn/a4/xmad_15532384207972_iJXSx.jpg",
-        "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg",
-        "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
-        "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg"
-      ],
-      data: [
-        {
-          newsTitle: "新闻动态",
-          newsTitleImgSrc: "/image/index/newsInfo.png",
-          morePath:'/',
-          newsList: [
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            }
-          ]
-        },
-        {
-          newsTitle: "通知公告",
-          newsTitleImgSrc: "/image/index/icon_Horn.png",
-          morePath:'/',
-          newsList: [
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            },
-            {
-              newListTitle:
-                "2019年全国羽毛球后备人才基地决赛在安徽淮南举行颁奖仪式",
-              newsPath: "/"
-            }
-          ]
-        }
-      ]
+      dataList: [],
+      news:{
+         newsTitle: "新闻动态",
+         newsTitleImgSrc: "/image/index/newsInfo.png",
+         morePath: "/news",
+      },
+      newsList: [],
+      notices:{
+         newsTitle: "通知公告",
+         newsTitleImgSrc: "/image/index/icon_Horn.png",
+         morePath: "/notice",
+      },
+      noticeList:[],
+      paging: {
+        limit: 4,
+        page: 1
+      },
+      paging2: {
+        limit: 6,
+        page: 1
+      }
     };
   },
 
   mounted() {
     this.creSwiper();
   },
+  created() {
+    this.getList();
+  },
   methods: {
+    getList() {
+      // 新闻列表(展示图片)
+      GetPhotoList(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.dataList = list.items;
+        }
+      });
+      // 新闻列表(无图)
+      GetNewsList(Object.assign(this.paging2)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.newsList = list.items;
+        }
+      });
+      // 通知公告
+      GetNotificList(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.noticeList = list.items;
+        }
+
+      })
+    },
     creSwiper() {
       this.$nextTick(() => {
         this.swiper = new Swiper(".wheel_content", {
@@ -180,7 +162,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.news {
+.newsInformation {
   .imgs {
     width: 100%;
     height: 240px;

@@ -8,9 +8,9 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide wheel2_center" v-for="(item,index) in data" :key="index">
             <div class="wheel2_img">
-              <img :src="item.greatPVimg" alt />
+              <img :src="item.thumbnail" alt />
             </div>
-            <div class="wheel2_wenzi">{{item.greatPVWords}}</div>
+            <div class="wheel2_wenzi">{{item.news_subject}}</div>
           </div>
         </div>
       </div>
@@ -23,46 +23,54 @@
 
 <script>
 import Swiper from "swiper";
+import { GetPhotoVideosList } from "@/api/admin/common.js";
 export default {
   data() {
     return {
       data: [
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15532384207972_iJXSx.jpg",
-          greatPVWords: "1"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg",
-          greatPVWords: "2"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
-          greatPVWords: "3"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
-          greatPVWords: "4"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
-          greatPVWords: "5"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15532384207972_iJXSx.jpg",
-          greatPVWords: "6"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg",
-          greatPVWords: "7"
-        },
-        {
-          greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
-          greatPVWords: "8"
-        }
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15532384207972_iJXSx.jpg",
+        //   greatPVWords: "1"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg",
+        //   greatPVWords: "2"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
+        //   greatPVWords: "3"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
+        //   greatPVWords: "4"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
+        //   greatPVWords: "5"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15532384207972_iJXSx.jpg",
+        //   greatPVWords: "6"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15535933141925_ulkYv.jpg",
+        //   greatPVWords: "7"
+        // },
+        // {
+        //   greatPVimg: "https://i1.mifile.cn/a4/xmad_15517939170939_oiXCK.jpg",
+        //   greatPVWords: "8"
+        // }
       ],
       screenWidth: document.body.clientWidth,
-      slidesPerView: 4
+      slidesPerView: 4,
+      paging: {
+        limit: 6,
+        page: 1
+      }
     };
+  },
+  created(){
+    this.getList()
   },
   watch: {
     screenWidth(val) {
@@ -92,6 +100,15 @@ export default {
     };
   },
   methods: {
+    getList() {
+      //精彩图片视频列表
+      GetPhotoVideosList(Object.assign(this.paging)).then(data => {
+        var list = data.data.result;
+        if (list) {
+          this.data = list.items;
+        }
+      });
+    },
     prev() {
       this.data.unshift(this.data.pop());
     },

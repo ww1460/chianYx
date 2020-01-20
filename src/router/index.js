@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store';
+
 import login from '@/views/admin/login';
 import index from '@/views/admin/home';
 import news from '@/views/admin/news';
+import newsDetails from '@/views/admin/news/details';
+import notice from '@/views/admin/notice';
+import noticeDetails from '@/views/admin/notice/details';
 import test from '@/views/admin/test';
+import enquiry from '@/views/admin/enquiry';
 import signUp from '@/views/admin/test/content/signUp';
 import evaluationStaff from '@/views/admin/evaluationStaff/index';
 import evaluationList from '@/views/admin/evaluationStaff/content/evaluationList';
@@ -12,6 +17,35 @@ import evaluationListDetail from '@/views/admin/evaluationStaff/content/evaluati
 import evaluationStaffSignUp from '@/views/admin/evaluationStaff/content/signUp';
 import testInstitutions from '@/views/admin/testInstitutions/index';
 import testInstitutionsDetail from '@/views/admin/testInstitutions/content/testInstitutionsDetail';
+
+import personal from '@/views/admin/personal/index';
+// 运动员
+import gradeTestRecord from '@/views/admin/personal/athletes/gradeTestRecord';
+import competitionApplication from '@/views/admin/personal/athletes/competitionApplication';
+import competitionApplicationRecord from '@/views/admin/personal/athletes/competitionApplicationRecord';
+import gradeCertificate from '@/views/admin/personal/athletes/gradeCertificate';
+import gradeCertificateDelivery from "@/views/admin/personal/athletes/gradeCertificateDelivery";
+import invoice from '@/views/admin/personal/athletes/invoice';
+import invoiceList from '@/views/admin/personal/athletes/invoiceList';
+import completeInformation from '@/views/admin/components/completeInformation';
+import changePassword from '@/views/admin/components/changePassword';
+//考评员
+import trainingRecord from '@/views/admin/personal/evaluationStaff/trainingRecord';
+import workRecord from '@/views/admin/personal/evaluationStaff/workRecord';
+import payRecord from '@/views/admin/personal/evaluationStaff/payRecord';
+// 测试机构
+import qualificationApplication from '@/views/admin/personal/testingInstitutions/qualificationApplication';
+import testApplication from '@/views/admin/personal/testingInstitutions/testApplication';
+import testList from '@/views/admin/personal/testingInstitutions/testList';
+import viewEntry from '@/views/admin/personal/testingInstitutions/viewEntry';
+import testScheduling from '@/views/admin/personal/testingInstitutions/testScheduling';
+import complaintHandling from '@/views/admin/personal/testingInstitutions/complaintHandling';
+import pliceApplication from '@/views/admin/personal/testingInstitutions/pliceApplication';
+import addApplication from '@/views/admin/personal/testingInstitutions/addApplication';
+import videoRecording from '@/views/admin/personal/testingInstitutions/videoRecording';
+import orderCenter from '@/views/admin/personal/testingInstitutions/orderCenter';
+
+
 import register from '@/views/admin/register';
 import signin from '@/views/admin/login/signin';
 Vue.use(Router)
@@ -65,6 +99,45 @@ const router = new Router({
             title: "新闻动态",
             keepAlive: true,
             lightFlag: "news",
+            crumbsFlag: false,
+            bottomFlag: true,
+          }
+        },
+        // 新闻详情
+        {
+          path: '/news/newsDetails',
+          name: 'newsDetails',
+          component: newsDetails,
+          meta: {
+            title: "新闻详情",
+            keepAlive: true,
+            lightFlag: "news",
+            crumbsFlag: true,
+            bottomFlag: true,
+          }
+        },
+        // 通知公告
+        {
+          path: '/notice',
+          name: 'notice',
+          component: notice,
+          meta: {
+            title: "通知公告",
+            keepAlive: true,
+            lightFlag: "notice",
+            crumbsFlag: false,
+            bottomFlag: true,
+          }
+        },
+        // 通知公告详情
+        {
+          path: '/notice/noticeDetails',
+          name: 'noticeDetails',
+          component: noticeDetails,
+          meta: {
+            title: "通知公告详情",
+            keepAlive: true,
+            lightFlag: "notice",
             crumbsFlag: true,
             bottomFlag: true,
           }
@@ -179,6 +252,7 @@ const router = new Router({
             bottomFlag: true,
           }
         },
+        // 注册
         {
           path: '/register',
           name: 'register',
@@ -190,6 +264,344 @@ const router = new Router({
             crumbsFlag: false,
             bottomFlag: false,
           },
+        },
+        // 公开查询
+        {
+          path: '/enquiry',
+          name: 'enquiry',
+          component: enquiry,
+          meta: {
+            title: "公开查询",
+            keepAlive: false,
+            lightFlag: "enquiry",
+            crumbsFlag: false,
+            bottomFlag: false,
+          },
+        },
+        //个人中心 
+        {
+          path: '/personal',
+          name: 'personal',
+          component: personal,
+          // 根据角色判断进入个人中心时重定向页面
+          redirect: () => {
+            // 判断登录信息是否完善
+            if (!store.state.user.personalInfo && store.state.user.userRole) return '/personal/completeInformation'
+            switch (store.state.user.userRole) {
+              case "1":
+                return '/personal/gradeTestRecord'
+
+              case "2":
+                return '/personal/trainingRecord'
+
+              case "3":
+                return '/personal/qualificationApplication'
+              default:
+                return '/signin'
+            }
+          },
+          meta: {
+            title: "个人中心",
+            keepAlive: false,
+            lightFlag: "personal",
+            crumbsFlag: true,
+            bottomFlag: true,
+          },
+          children: [
+            // 运动员角色
+            {
+              path: '/personal/gradeTestRecord',
+              name: 'gradeTestRecord',
+              component: gradeTestRecord,
+              meta: {
+                title: "等级测试记录",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 1,
+              },
+            },
+            {
+              path: '/personal/competitionApplication',
+              name: 'competitionApplication',
+              component: competitionApplication,
+              meta: {
+                title: "赛事申请",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 1,
+              },
+            },
+            {
+              path: '/personal/competitionApplicationRecord',
+              name: 'competitionApplicationRecord',
+              component: competitionApplicationRecord,
+              meta: {
+                title: "赛事申请记录",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 1,
+              },
+            },
+            {
+              path: '/personal/gradeCertificate',
+              name: 'gradeCertificate',
+              component: gradeCertificate,
+              meta: {
+                title: "等级证书",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              },
+            },
+            {
+              path: "/personal/gradeCertificateDelivery",
+              name: "gradeCertificateDelivery",
+              component: gradeCertificateDelivery,
+              meta: {
+                title: "申请等级证书",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 1,
+              }
+            },
+            {
+              path: '/personal/invoiceList',
+              name: 'invoiceList',
+              component: invoiceList,
+              meta: {
+                title: "发票",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              },
+            },
+            {
+              path: '/personal/invoice',
+              name: 'invoice',
+              component: invoice,
+              meta: {
+                title: "发票详情",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              },
+            },
+
+            {
+              path: '/personal/completeInformation',
+              name: 'completeInformation',
+              component: completeInformation,
+              meta: {
+                title: "完善信息",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              },
+            },
+            {
+              path: '/personal/changePassword',
+              name: 'changePassword',
+              component: changePassword,
+              meta: {
+                title: "修改密码",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              },
+            },
+
+            // 考评员
+            {
+              path: '/personal/trainingRecord',
+              name: 'trainingRecord',
+              component: trainingRecord,
+              meta: {
+                title: "培训记录",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 2,
+              },
+            },
+            // 考评员
+            {
+              path: '/personal/payRecord',
+              name: 'payRecord',
+              component: payRecord,
+              meta: {
+                title: "培训记录",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 2,
+              },
+            },
+            {
+              path: '/personal/workRecord',
+              name: 'workRecord',
+              component: workRecord,
+              meta: {
+                title: "工作记录",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 2,
+              },
+            },
+
+            // 测试机构
+            {
+              path: '/personal/qualificationApplication',
+              name: 'qualificationApplication',
+              component: qualificationApplication,
+              meta: {
+                title: "资质申请",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              },
+            },
+            // 测试申请
+            {
+              path: '/personal/testApplication',
+              name: 'testApplication',
+              component: testApplication,
+              meta: {
+                title: "测试申请",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              }
+            },
+            // 测试列表
+            {
+              path: '/personal/testList',
+              name: 'testList',
+              component: testList,
+              meta: {
+                title: "测试列表",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              }
+            },
+            {
+              path: '/personal/testList/viewEntry',
+              name: 'viewEntry',
+              component: viewEntry,
+              meta: {
+                title: "查看录入",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              }
+            },
+            {
+              path: '/personal/testList/viewEntry/testScheduling',
+              name: 'testScheduling',
+              component: testScheduling,
+              meta: {
+                title: "查看录入",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+              }
+            },
+            // 申诉处理
+            {
+              path: '/personal/complaintHandling',
+              name: 'complaintHandling',
+              component: complaintHandling,
+              meta: {
+                title: "申诉处理",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              }
+            },
+            // 订单中心
+            {
+              path: '/personal/orderCenter',
+              name: 'orderCenter',
+              component: orderCenter,
+              meta: {
+                title: "订单中心",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              }
+            },
+            // 考点申请
+            {
+              path: '/personal/pliceApplication',
+              name: 'pliceApplication',
+              component: pliceApplication,
+              meta: {
+                title: "考点申请",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              }
+            },
+            // 新增申请
+            {
+              path: '/personal/addApplication',
+              name: 'addApplication',
+              component: addApplication,
+              meta: {
+                title: "新增申请",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              }
+            },
+            // 视频录像
+            {
+              path: '/personal/videoRecording',
+              name: 'videoRecording',
+              component: videoRecording,
+              meta: {
+                title: "视频录像",
+                keepAlive: false,
+                lightFlag: "personal",
+                crumbsFlag: true,
+                bottomFlag: true,
+                type: 3,
+              }
+            }
+          ]
+
         },
       ],
 
@@ -227,8 +639,25 @@ router.beforeEach((to, from, next) => {
       "path": to.fullPath
     });
   }
+  window.console.log(route)
   store.commit("SET_ROUTELIST", route)
   next()
+
+
+  // window.console.log(to.matched)
+  if (to.matched.some(record => record.meta.type)) {
+    // 根据角色判断加载的路由
+    if (to.matched.some(record => record.meta.type == store.state.user.userRole)) {
+      next()
+    } else {
+      next({
+        path: '/index'
+      })
+    }
+  } else {
+    next()
+  }
+
 });
 
 
